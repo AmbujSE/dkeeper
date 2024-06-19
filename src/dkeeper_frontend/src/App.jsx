@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { dkeeper_backend } from 'declarations/dkeeper_backend';
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -10,8 +10,19 @@ function App() {
 
   function addNote(newNote) {
     setNotes(prevNotes => {
-      return [...prevNotes, newNote];
+      dkeeper_backend.createNote(newNote.title, newNote.content)
+      return [newNote, ...prevNotes];
     });
+  }
+
+  useEffect(() => {
+    console.log("Triggered")
+    fetchData ();
+  }, []);
+
+  async function fetchData () {
+    const notesArray = await dkeeper_backend.readNOtes();
+    setNotes(notesArray);
   }
 
   function deleteNote(id) {
@@ -24,7 +35,6 @@ function App() {
 
   return (
     <div>
-      {/* <h1>Hello World!</h1> */}
       <Header />
       <CreateArea onAdd={addNote} />
       {notes.map((noteItem, index) => {
