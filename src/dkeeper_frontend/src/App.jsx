@@ -21,11 +21,12 @@ function App() {
   }, []);
 
   async function fetchData () {
-    const notesArray = await dkeeper_backend.readNOtes();
+    const notesArray = await dkeeper_backend.readNotes();
     setNotes(notesArray);
   }
 
   function deleteNote(id) {
+    dkeeper_backend.removeNote(id);
     setNotes(prevNotes => {
       return prevNotes.filter((noteItem, index) => {
         return index !== id;
